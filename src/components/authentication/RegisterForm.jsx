@@ -1,54 +1,177 @@
-import React from 'react'
-import { FiEye, FiHash } from 'react-icons/fi'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react';
+import { FiEye, FiHash, FiEyeOff } from 'react-icons/fi';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
-const RegisterForm = ({path}) => {
+const RegisterForm = ({ path }) => {
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        agreeToTerms: false
+    });
+    const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
+
+    const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: type === 'checkbox' ? checked : value
+        }));
+    };
+
+    const generatePassword = () => {
+        const length = 12;
+        const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+        let password = "";
+        for (let i = 0; i < length; i++) {
+            password += charset.charAt(Math.floor(Math.random() * charset.length));
+        }
+        setFormData(prev => ({
+            ...prev,
+            password,
+            confirmPassword: password
+        }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (formData.password !== formData.confirmPassword) {
+            toast.error("Passwords don't match!");
+            return;
+        }
+
+        if (!formData.agreeToTerms) {
+            toast.error("Please agree to the terms and conditions");
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: formData.name,
+                    email: formData.email,
+                    password: formData.password
+                }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Registration failed');
+            }
+
+            localStorage.setItem('token', data.token);
+            toast.success('Registration successful! Please check your email for verification.');
+            navigate('/opt-cover');
+        } catch (error) {
+            toast.error(error.message || 'Registration failed');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <>
             <h2 className="fs-20 fw-bolder mb-4">Register</h2>
-            <h4 className="fs-13 fw-bold mb-2">Manage all your Duralux crm</h4>
-            <p className="fs-12 fw-medium text-muted">Let's get you all setup, so you can verify your personal
-                account and begine setting up your profile.</p>
-            <form action="index.html" className="w-100 mt-4 pt-2">
+            <form onSubmit={handleSubmit} className="w-100 mt-4 pt-2">
                 <div className="mb-4">
-                    <input type="text" className="form-control" placeholder="Full Name" required />
+                    <input
+                        type="text"
+                        name="name"
+                        className="form-control"
+                        placeholder="Full Name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        required
+                    />
                 </div>
                 <div className="mb-4">
-                    <input type="email" className="form-control" placeholder="Email" required />
-                </div>
-                <div className="mb-4">
-                    <input type="tel" className="form-control" placeholder="Username" required />
+                    <input
+                        type="email"
+                        name="email"
+                        className="form-control"
+                        placeholder="Email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                    />
                 </div>
                 <div className="mb-4 generate-pass">
                     <div className="input-group field">
-                        <input type="password" className="form-control password" id="newPassword" placeholder="Password Confirm" />
-                        <div className="input-group-text c-pointer gen-pass" data-bs-toggle="tooltip" title="Generate Password"><FiHash size={16}/></div>
-                        <div className="input-group-text border-start bg-gray-2 c-pointer" data-bs-toggle="tooltip" title="Show/Hide Password"><FiEye size={16}/></div>
-                    </div>
-                    <div className="progress-bar mt-2">
-                        <div />
-                        <div />
-                        <div />
-                        <div />
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            name="password"
+                            className="form-control password"
+                            placeholder="Password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            required
+                        />
+                        {/* <div
+                            className="input-group-text c-pointer gen-pass"
+                            onClick={generatePassword}
+                            title="Generate Password"
+                        >
+                            <FiHash size={16}/>
+                        </div> */}
+                        <div
+                            className="input-group-text border-start bg-gray-2 c-pointer"
+                            onClick={() => setShowPassword(!showPassword)}
+                            title="Show/Hide Password"
+                        >
+                            {showPassword ? <FiEyeOff size={16}/> : <FiEye size={16}/>}
+                        </div>
                     </div>
                 </div>
                 <div className="mb-4">
-                    <input type="password" className="form-control" placeholder="Password again" required />
+                    <input
+                        type={showPassword ? "text" : "password"}
+                        name="confirmPassword"
+                        className="form-control"
+                        placeholder="Confirm Password"
+                        value={formData.confirmPassword}
+                        onChange={handleChange}
+                        required
+                    />
                 </div>
                 <div className="mt-4">
-                    <div className="custom-control custom-checkbox mb-2">
-                        <input type="checkbox" className="custom-control-input" id="receiveMial" required />
-                        <label className="custom-control-label c-pointer text-muted" htmlFor="receiveMial" style={{ fontWeight: '400 !important' }}>Yes, I wnat to receive Duralux community
-                            emails</label>
-                    </div>
                     <div className="custom-control custom-checkbox">
-                        <input type="checkbox" className="custom-control-input" id="termsCondition" required />
-                        <label className="custom-control-label c-pointer text-muted" htmlFor="termsCondition" style={{ fontWeight: '400 !important' }}>I agree to all the <a href="#">Terms &amp;
-                            Conditions</a> and <a href="#">Fees</a>.</label>
+                        <input
+                            type="checkbox"
+                            name="agreeToTerms"
+                            className="custom-control-input"
+                            id="termsCondition"
+                            checked={formData.agreeToTerms}
+                            onChange={handleChange}
+                            required
+                        />
+                        <label
+                            className="custom-control-label c-pointer text-muted"
+                            htmlFor="termsCondition"
+                            style={{ fontWeight: '400 !important' }}
+                        >
+                            I agree to all the <a href="#">Terms &amp; Conditions</a> and <a href="#">Fees</a>.
+                        </label>
                     </div>
                 </div>
                 <div className="mt-5">
-                    <button type="submit" className="btn btn-lg btn-primary w-100">Create Account</button>
+                    <button
+                        type="submit"
+                        className="btn btn-lg btn-primary w-100"
+                        disabled={loading}
+                    >
+                        {loading ? 'Creating Account...' : 'Create Account'}
+                    </button>
                 </div>
             </form>
             <div className="mt-5 text-muted">
@@ -56,7 +179,7 @@ const RegisterForm = ({path}) => {
                 <Link to={path} className="fw-bold"> Login</Link>
             </div>
         </>
-    )
-}
+    );
+};
 
-export default RegisterForm
+export default RegisterForm;
