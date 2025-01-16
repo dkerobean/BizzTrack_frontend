@@ -45,6 +45,7 @@ const LoginForm = ({ registerPath, resetPath }) => {
             // Handle successful login
             toast.success('Login successful!');
             localStorage.setItem('token', data.token);
+            localStorage.setItem('email', data.email);
 
             // If remember me is checked, store the email
             if (formData.rememberMe) {
@@ -52,7 +53,7 @@ const LoginForm = ({ registerPath, resetPath }) => {
             }
 
             // Navigate to dashboard or home page
-            navigate('/dashboard');
+            navigate('/dashboards/analytics');
 
         } catch (error) {
             toast.error(error.message || 'Failed to login. Please try again.');
