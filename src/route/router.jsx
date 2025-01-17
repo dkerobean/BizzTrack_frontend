@@ -330,7 +330,7 @@ export const router = createBrowserRouter([
                 element: <ErrorCreative />
             },
             {
-                path: "/authentication/verify/cover",
+                path: "/authentication/verify",
                 element: <OtpCover />
             },
             {

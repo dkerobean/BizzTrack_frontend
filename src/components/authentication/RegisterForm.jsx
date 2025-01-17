@@ -73,7 +73,7 @@ const RegisterForm = ({ path }) => {
             localStorage.setItem('token', data.token);
             localStorage.setItem('email', data.email);
             toast.success('Registration successful! Please check your email for verification.');
-            navigate('/authentication/verify/cover');
+            navigate('/authentication/verify');
         } catch (error) {
             toast.error(error.message || 'Registration failed');
         } finally {

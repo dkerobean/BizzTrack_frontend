@@ -70,7 +70,7 @@ const OtpVerifyForm = () => {
             }
 
             toast.success('Email verified successfully!');
-            navigate('/dashboard'); 
+            navigate('/dashboard');
         } catch (error) {
             toast.error(error.message || 'Verification failed');
         } finally {
@@ -81,7 +81,7 @@ const OtpVerifyForm = () => {
     return (
         <>
             <h4 className="fs-13 fw-bold mb-2">
-                Please enter the code generated one time password to verify your account.
+                Please enter the code to verify your email.
             </h4>
             <p className="fs-12 fw-medium text-muted">
                 <span>A code has been sent to </span>
