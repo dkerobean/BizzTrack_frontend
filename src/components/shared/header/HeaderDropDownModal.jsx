@@ -187,7 +187,7 @@ const HeaderDropDownModal = () => {
                     <span>Add New Items</span>
                 </Link>
             </div>
-        </div>
+       </div>
     )
 }
 
