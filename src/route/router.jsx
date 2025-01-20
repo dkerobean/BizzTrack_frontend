@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import RootLayout from "../layout/root";
-import Home from "../pages/home";
+import Home2 from "../pages/login-cover";
+import Home from "../pages/login-cover";
 import Analytics from "../pages/analytics";
 import ReportsSales from "../pages/reports-sales";
 import ReportsLeads from "../pages/reports-leads";
@@ -188,6 +189,10 @@ export const router = createBrowserRouter([
             },
 
         ]
+    },
+    {
+        path: "/login",
+        element: <LoginCover />
     },
     {
         path: "/",
