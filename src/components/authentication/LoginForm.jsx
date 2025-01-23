@@ -46,6 +46,7 @@ const LoginForm = ({ registerPath, resetPath }) => {
             toast.success('Login successful!');
             localStorage.setItem('token', data.accessToken);
             localStorage.setItem('email', data.email);
+            
 
             // If remember me is checked, store the email
             if (formData.rememberMe) {

@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import RootLayout from "../layout/root";
-import Home from "../pages/login-cover";
+import Home from "../pages/home";
 import Analytics from "../pages/analytics";
 import ReportsSales from "../pages/reports-sales";
 import ReportsLeads from "../pages/reports-leads";
@@ -69,10 +69,25 @@ import WidgetsCharts from "../pages/widgets-charts";
 import WidgetsStatistics from "../pages/widgets-statistics";
 import WidgetsMiscellaneous from "../pages/widgets-miscellaneous";
 
+import { Navigate } from 'react-router-dom'
+import { useContext } from 'react'
+
+import { AuthContext } from '../../api/authContext'
+
+const ProtectedRoute = ({ children }) => {
+  const { user, loading } = useContext(AuthContext)
+
+  if (loading) {
+    return <div>Loading...</div> // Optional loading indicator
+  }
+
+  return user ? children : <Navigate to="/login" replace />
+}
+
 export const router = createBrowserRouter([
     {
         path: "/",
-        element: <RootLayout />,
+        element: <ProtectedRoute><RootLayout /></ProtectedRoute>,
         children: [
             {
                 path: "/",
