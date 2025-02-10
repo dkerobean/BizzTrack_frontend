@@ -70,7 +70,7 @@ const OtpVerifyForm = () => {
             }
 
             toast.success('Email verified successfully!');
-            navigate('/dashboard');
+            navigate('/dashboards/analytics');
         } catch (error) {
             toast.error(error.message || 'Verification failed');
         } finally {

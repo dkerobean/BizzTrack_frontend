@@ -2,11 +2,10 @@ import React, { useState, useContext } from "react";
 import { FiFacebook, FiGithub, FiTwitter } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { AuthContext } from "../../../api/authContext"; // Adjust path as needed
-
+import { AuthContext } from "../../../api/authContext";
 const LoginForm = ({ registerPath, resetPath }) => {
     const navigate = useNavigate();
-    const { setUser } = useContext(AuthContext); 
+    const { setUser } = useContext(AuthContext);
     const [formData, setFormData] = useState({
         email: "",
         password: "",
@@ -131,6 +130,27 @@ const LoginForm = ({ registerPath, resetPath }) => {
                     </button>
                 </div>
             </form>
+       {/* Rest of your social login and signup link code remains the same */}
+            <div className="w-100 mt-5 text-center mx-auto">
+                <div className="mb-4 border-bottom position-relative">
+                    <span className="small py-1 px-3 text-uppercase text-muted bg-white position-absolute translate-middle">or</span>
+                </div>
+                <div className="d-flex align-items-center justify-content-center gap-2">
+                    <a href="#" className="btn btn-light-brand flex-fill" data-bs-toggle="tooltip" data-bs-trigger="hover" title="Login with Facebook">
+                        <FiFacebook size={16} />
+                    </a>
+                    <a href="#" className="btn btn-light-brand flex-fill" data-bs-toggle="tooltip" data-bs-trigger="hover" title="Login with Twitter">
+                        <FiTwitter size={16} />
+                    </a>
+                    <a href="#" className="btn btn-light-brand flex-fill" data-bs-toggle="tooltip" data-bs-trigger="hover" title="Login with Github">
+                        <FiGithub size={16} className='text' />
+                    </a>
+                </div>
+            </div>
+            <div className="mt-5 text-muted">
+                <span> Don't have an account?</span>
+                <Link to={registerPath} className="fw-bold"> Create an Account</Link>
+            </div>
         </>
     );
 };
