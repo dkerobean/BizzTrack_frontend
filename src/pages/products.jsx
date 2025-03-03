@@ -30,7 +30,7 @@ const Products = () => {
             </PageHeader>
             <div className='main-content'>
                 <div className='row'>
-                    <LatestLeads title={"Leads"} />
+                    {/* <LatestLeads title={"Leads"} />
                     <TopSelling title={"Top Selling"} />
                     <Remainders title={"Remainders"} />
                     <Tickets title={"Tickets"} paginationShow={true} />
@@ -47,7 +47,7 @@ const Products = () => {
                     <InvoiceSummary title={"Invoice Summary"} />
                     <TrafficReports title={"Traffic Reports"} />
                     <Store title={"Store Overview"}/>
-                    <Customers title={"New Customers"}/>
+                    <Customers title={"New Customers"}/> */}
                     <Product title={"Products"}/>
                 </div>
             </div>
