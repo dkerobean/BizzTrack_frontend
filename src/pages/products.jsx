@@ -19,7 +19,7 @@ import InvoiceSummary from '@/components/widgetsTables/InvoiceSummary'
 import TrafficReports from '@/components/widgetsTables/TrafficReports'
 import Store from '@/components/widgetsTables/Store'
 import Customers from '@/components/widgetsTables/Customers'
-import Orders from '@/components/widgetsTables/Orders'
+import Product from '@/components/widgetsTables/ProductTable'
 import Footer from '@/components/shared/Footer'
 
 const Products = () => {
@@ -48,7 +48,7 @@ const Products = () => {
                     <TrafficReports title={"Traffic Reports"} />
                     <Store title={"Store Overview"}/>
                     <Customers title={"New Customers"}/>
-                    <Orders title={"Recent Orders"}/>
+                    <Product title={"Products"}/>
                 </div>
             </div>
             <Footer/>
