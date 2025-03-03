@@ -21,6 +21,13 @@ export const menuList = [
     },
     {
         id: 1,
+        name: "products",
+        path: "/products",
+        icon: 'feather-briefcase',
+        dropdownMenu: []
+    },
+    {
+        id: 2,
         name: "reports",
         path: "#",
         icon: 'feather-cast',
@@ -53,7 +60,7 @@ export const menuList = [
         ]
     },
     {
-        id: 2,
+        id: 3,
         name: "applications",
         path: '#',
         icon: 'feather-send',
@@ -97,7 +104,7 @@ export const menuList = [
         ]
     },
     {
-        id: 3,
+        id: 4,
         name: "proposal",
         path: "#",
         icon: 'feather-sign',
@@ -130,7 +137,7 @@ export const menuList = [
         ],
     },
     {
-        id: 4,
+        id: 5,
         name: "payment",
         path: "#",
         icon: 'feather-dollar-sign',
@@ -156,7 +163,7 @@ export const menuList = [
         ]
     },
     {
-        id: 5,
+        id: 6,
         name: "customers",
         path: "#",
         icon: 'feather-users',
@@ -182,7 +189,7 @@ export const menuList = [
         ]
     },
     {
-        id: 6,
+        id: 7,
         name: "leads",
         path: "#",
         icon: 'feather-alert-circle',
@@ -208,7 +215,7 @@ export const menuList = [
         ]
     },
     {
-        id: 7,
+        id: 8,
         name: "projects",
         path: "#",
         icon: 'feather-briefcase',
@@ -234,7 +241,7 @@ export const menuList = [
         ]
     },
     {
-        id: 8,
+        id: 9,
         name: "widgets",
         path: "#",
         icon: 'feather-layout',
@@ -272,7 +279,7 @@ export const menuList = [
         ]
     },
     {
-        id: 9,
+        id: 10,
         name: "settings",
         path: "#",
         icon: 'feather-settings',
@@ -358,7 +365,7 @@ export const menuList = [
         ]
     },
     {
-        id: 10,
+        id: 11,
         name: "authentication",
         path: "#",
         icon: 'feather-power',
@@ -498,7 +505,7 @@ export const menuList = [
         ]
     },
     {
-        id: 11,
+        id: 12,
         name: "Help Center",
         path: "#",
         icon: 'feather-life-buoy',
