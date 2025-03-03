@@ -64,6 +64,7 @@ import MaintenanceMinimal from "../pages/maintenance-minimal";
 import MaintenanceCreative from "../pages/maintenance-creative";
 import HelpKnowledgebase from "../pages/help-knowledgebase";
 import WidgetsLists from "../pages/widgets-lists";
+import Products from "../pages/products";
 import WidgetsTables from "../pages/widgets-tables";
 import WidgetsCharts from "../pages/widgets-charts";
 import WidgetsStatistics from "../pages/widgets-statistics";
@@ -78,7 +79,7 @@ const ProtectedRoute = ({ children }) => {
   const { user, loading } = useContext(AuthContext)
 
   if (loading) {
-    return <div>Loading...</div> 
+    return <div>Loading...</div>
   }
 
   return user ? children : <Navigate to="/login" replace />
@@ -184,6 +185,10 @@ export const router = createBrowserRouter([
             {
                 path: "/widgets/tables",
                 element: <WidgetsTables />
+            },
+            {
+                path: "/products",
+                element: <Products />
             },
             {
                 path: "/widgets/charts",
