@@ -1,47 +1,58 @@
 import React, { useState } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 
 const AddProductModal = ({ show, handleClose, refreshProducts }) => {
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
-    const [price, setPrice] = useState('');
-    const [stock, setStock] = useState('');
-    const [lowStockAlert, setLowStockAlert] = useState('');
-    const [category, setCategory] = useState('');
-    const [sku, setSku] = useState('');
-    const [imageUrls, setImageUrls] = useState('');
+    const [formData, setFormData] = useState({
+        name: '',
+        description: '',
+        price: '',
+        stock: '',
+        lowStockAlert: '',
+        category: '',
+        sku: '',
+        organizationId: '67c58aa09078342e0b373466',
+        images: []
+    });
     const [loading, setLoading] = useState(false);
+    const [selectedFiles, setSelectedFiles] = useState([]);
 
     const generateSKU = () => {
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         let newSku = '';
         for (let i = 0; i < 9; i++) {
             newSku += chars.charAt(Math.floor(Math.random() * chars.length));
         }
-        setSku(newSku);
+        setFormData({...formData, sku: newSku});
+    };
+
+    const handleFileSelect = (e) => {
+        setSelectedFiles([...e.target.files]);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
 
+        const data = new FormData();
+        for (const field in formData) {
+            data.append(field, formData[field]);
+        }
+        selectedFiles.forEach(file => {
+            data.append('images', file);
+        });
+
         try {
             const token = localStorage.getItem('token');
             await axios.post(
                 `${import.meta.env.VITE_BACKEND_URL}/api/product/create`,
+                data,
                 {
-                    name,
-                    description,
-                    price: parseFloat(price),
-                    stock: parseInt(stock, 10),
-                    lowStockAlert: parseInt(lowStockAlert, 10),
-                    category,
-                    sku,
-                    images: imageUrls.split('\n').map(url => url.trim()).filter(url => url),
-                    organizationId: localStorage.getItem('organizationId')
-                },
-                { headers: { Authorization: `Bearer ${token}` } }
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }
             );
 
             refreshProducts();
@@ -53,69 +64,156 @@ const AddProductModal = ({ show, handleClose, refreshProducts }) => {
         }
     };
 
+    const handleChange = (e) => {
+        setFormData({...formData, [e.target.name]: e.target.value});
+        console.log(formData);
+    };
+
     return (
-        <Modal show={show} onHide={handleClose} centered>
+        <Modal show={show} onHide={handleClose} centered size="lg">
             <Modal.Header closeButton>
                 <Modal.Title>Add New Product</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
-                <Form onSubmit={handleSubmit}>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Product Name</Form.Label>
-                        <Form.Control type="text" value={name} onChange={(e) => setName(e.target.value)} required />
-                    </Form.Group>
+            <Form onSubmit={handleSubmit}>
+                <Modal.Body>
+                    <Row className="g-3">
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Product Name *</Form.Label>
+                                <Form.Control
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </Form.Group>
+                        </Col>
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>Description</Form.Label>
-                        <Form.Control type="text" value={description} onChange={(e) => setDescription(e.target.value)} required />
-                    </Form.Group>
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>SKU *</Form.Label>
+                                <div className="d-flex gap-2">
+                                    <Form.Control
+                                        name="sku"
+                                        value={formData.sku}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                    <Button
+                                        variant="outline-secondary"
+                                        onClick={generateSKU}
+                                    >
+                                        Generate
+                                    </Button>
+                                </div>
+                            </Form.Group>
+                        </Col>
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>Price</Form.Label>
-                        <Form.Control type="number" value={price} onChange={(e) => setPrice(e.target.value)} required />
-                    </Form.Group>
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Price *</Form.Label>
+                                <Form.Control
+                                    type="number"
+                                    name="price"
+                                    value={formData.price}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </Form.Group>
+                        </Col>
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>Stock Quantity</Form.Label>
-                        <Form.Control type="number" value={stock} onChange={(e) => setStock(e.target.value)} required />
-                    </Form.Group>
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Stock Quantity *</Form.Label>
+                                <Form.Control
+                                    type="number"
+                                    name="stock"
+                                    value={formData.stock}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </Form.Group>
+                        </Col>
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>Low Stock Alert Threshold</Form.Label>
-                        <Form.Control type="number" value={lowStockAlert} onChange={(e) => setLowStockAlert(e.target.value)} required />
-                    </Form.Group>
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Low Stock Alert *</Form.Label>
+                                <Form.Control
+                                    type="number"
+                                    name="lowStockAlert"
+                                    value={formData.lowStockAlert}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </Form.Group>
+                        </Col>
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>Category</Form.Label>
-                        <Form.Control type="text" value={category} onChange={(e) => setCategory(e.target.value)} required />
-                    </Form.Group>
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Category *</Form.Label>
+                                <Form.Control
+                                    name="category"
+                                    value={formData.category}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </Form.Group>
+                        </Col>
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>SKU</Form.Label>
-                        <div className="d-flex">
-                            <Form.Control type="text" value={sku} onChange={(e) => setSku(e.target.value)} required />
-                            <Button variant="secondary" onClick={generateSKU} className="ms-2">
-                                Generate
-                            </Button>
-                        </div>
-                    </Form.Group>
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Organization ID *</Form.Label>
+                                <Form.Control
+                                    name="organizationId"
+                                    value={formData.organizationId}
+                                    onChange={handleChange}
+                                    required
+                                    disabled
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>Image URLs (one per line)</Form.Label>
-                        <Form.Control
-                            as="textarea"
-                            rows={3}
-                            value={imageUrls}
-                            onChange={(e) => setImageUrls(e.target.value)}
-                            placeholder="Enter each image URL on a new line"
-                        />
-                    </Form.Group>
+                                />
+                            </Form.Group>
+                        </Col>
 
-                    <Button variant="primary" type="submit" disabled={loading}>
-                        {loading ? 'Adding...' : 'Add Product'}
+                        <Col md={12}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Description</Form.Label>
+                                <Form.Control
+                                    as="textarea"
+                                    rows={3}
+                                    name="description"
+                                    value={formData.description}
+                                    onChange={handleChange}
+                                />
+                            </Form.Group>
+                        </Col>
+
+                        <Col md={12}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Product Images</Form.Label>
+                                <Form.Control
+                                    type="file"
+                                    multiple
+                                    onChange={handleFileSelect}
+                                    accept="image/*"
+                                />
+                                <div className="mt-1">
+                                    {selectedFiles.length > 0 && (
+                                        <div>Selected files: {selectedFiles.length}</div>
+                                    )}
+                                </div>
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
                     </Button>
-                </Form>
-            </Modal.Body>
+                    <Button variant="primary" type="submit" disabled={loading}>
+                        {loading ? 'Saving...' : 'Save Product'}
+                    </Button>
+                </Modal.Footer>
+            </Form>
         </Modal>
     );
 };
