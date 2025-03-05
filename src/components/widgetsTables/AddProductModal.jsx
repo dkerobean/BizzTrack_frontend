@@ -35,12 +35,27 @@ const AddProductModal = ({ show, handleClose, refreshProducts }) => {
         setLoading(true);
 
         const data = new FormData();
-        for (const field in formData) {
-            data.append(field, formData[field]);
-        }
+
+        // Append all fields including organizationId
+        data.append('name', formData.name);
+        data.append('description', formData.description);
+        data.append('price', formData.price);
+        data.append('stock', formData.stock);
+        data.append('lowStockAlert', formData.lowStockAlert);
+        data.append('category', formData.category);
+        data.append('sku', formData.sku);
+        data.append('organizationId', formData.organizationId); // Ensure this line exists
+
+        // Append files
         selectedFiles.forEach(file => {
             data.append('images', file);
         });
+
+        // Add debug logs
+        console.log('FormData entries:');
+        for (let [key, value] of data.entries()) {
+            console.log(key, value);
+        }
 
         try {
             const token = localStorage.getItem('token');
@@ -66,7 +81,6 @@ const AddProductModal = ({ show, handleClose, refreshProducts }) => {
 
     const handleChange = (e) => {
         setFormData({...formData, [e.target.name]: e.target.value});
-        console.log(formData);
     };
 
     return (
