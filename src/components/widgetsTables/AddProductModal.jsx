@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
+import { toast } from 'sonner';
 
 const AddProductModal = ({ show, handleClose, refreshProducts }) => {
     const [formData, setFormData] = useState({
@@ -51,12 +52,6 @@ const AddProductModal = ({ show, handleClose, refreshProducts }) => {
             data.append('images', file);
         });
 
-        // Add debug logs
-        console.log('FormData entries:');
-        for (let [key, value] of data.entries()) {
-            console.log(key, value);
-        }
-
         try {
             const token = localStorage.getItem('token');
             await axios.post(
@@ -70,10 +65,12 @@ const AddProductModal = ({ show, handleClose, refreshProducts }) => {
                 }
             );
 
+            toast.success('Product added successfully!');
             refreshProducts();
             handleClose();
         } catch (error) {
             console.error('Error adding product:', error);
+            toast.error('Failed to add product. Please try again.');
         } finally {
             setLoading(false);
         }
@@ -176,13 +173,13 @@ const AddProductModal = ({ show, handleClose, refreshProducts }) => {
 
                         <Col md={6}>
                             <Form.Group className="mb-3">
-                                <Form.Label>Organization ID *</Form.Label>
                                 <Form.Control
                                     name="organizationId"
                                     value={formData.organizationId}
                                     onChange={handleChange}
                                     required
                                     disabled
+                                    hidden
 
                                 />
                             </Form.Group>
