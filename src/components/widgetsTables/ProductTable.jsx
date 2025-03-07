@@ -7,12 +7,16 @@ import { FiEdit, FiEye, FiTrash2, FiPlus } from 'react-icons/fi';
 import Pagination from '@/components/shared/Pagination';
 import HorizontalProgress from '@/components/shared/HorizontalProgress';
 import AddProductModal from './AddProductModal';
+import EditProductModal from './EditProductModal';
+import { toast } from 'sonner';
 
 const Product = ({ title }) => {
     const { refreshKey, isRemoved, isExpanded, handleRefresh, handleExpand, handleDelete } = useCardTitleActions();
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [showModal, setShowModal] = useState(false); // Controls modal visibility
+    const [showAddModal, setShowAddModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [currentProduct, setCurrentProduct] = useState(null);
 
     const fetchProducts = useCallback(async () => {
         try {
@@ -26,6 +30,7 @@ const Product = ({ title }) => {
             }
         } catch (error) {
             console.error('Error fetching products:', error);
+            toast.error('Failed to fetch products');
         } finally {
             setLoading(false);
         }
@@ -34,6 +39,30 @@ const Product = ({ title }) => {
     useEffect(() => {
         fetchProducts();
     }, [fetchProducts, refreshKey]);
+
+    const handleEditClick = (product) => {
+        setCurrentProduct(product);
+        setShowEditModal(true);
+    };
+
+    const handleDeleteClick = async (productId, productName) => {
+        if (window.confirm(`Are you sure you want to delete ${productName}?`)) {
+            try {
+                const token = localStorage.getItem('token');
+                await axios.delete(
+                    `${import.meta.env.VITE_BACKEND_URL}/api/product/delete/${productId}`,
+                    {
+                        headers: { Authorization: `Bearer ${token}` }
+                    }
+                );
+                toast.success(`Product "${productName}" deleted successfully`);
+                fetchProducts();
+            } catch (error) {
+                console.error('Error deleting product:', error);
+                toast.error('Failed to delete product');
+            }
+        }
+    };
 
     if (isRemoved) return null;
 
@@ -48,7 +77,7 @@ const Product = ({ title }) => {
                 />
                 <div className="card-header border-bottom d-flex justify-content-between align-items-center">
                     <h5 className="card-title">Product List</h5>
-                    <button className="btn btn-primary" onClick={() => setShowModal(true)}>
+                    <button className="btn btn-primary" onClick={() => setShowAddModal(true)}>
                         <FiPlus size={16} className="me-2" />
                         Add Product
                     </button>
@@ -102,17 +131,25 @@ const Product = ({ title }) => {
                                                 </td>
                                                 <td className="text-end">
                                                     <div className="hstack gap-2 justify-content-end">
-                                                        <a href="#" className="avatar-text avatar-md">
-                                                            <FiEye />
-                                                        </a>
-                                                        <a href="#" className="avatar-text avatar-md">
-                                                            <FiEdit />
-                                                        </a>
-                                                        <a href="#" className="avatar-text avatar-md">
-                                                            <FiTrash2 />
-                                                        </a>
+                                                        <button className="btn btn-icon" title="View Product">
+                                                        <FiEye size={18} className="text-secondary" />
+                                                        </button>
+                                                        <button
+                                                        className="btn btn-icon"
+                                                        onClick={() => handleEditClick(product)}
+                                                        title="Edit Product"
+                                                        >
+                                                        <FiEdit size={18} className="text-primary" />
+                                                        </button>
+                                                        <button
+                                                        className="btn btn-icon"
+                                                        onClick={() => handleDeleteClick(product._id, product.name)}
+                                                        title="Delete Product"
+                                                        >
+                                                        <FiTrash2 size={18} className="text-danger" />
+                                                        </button>
                                                     </div>
-                                                </td>
+                                                    </td>
                                             </tr>
                                         );
                                     })
@@ -126,7 +163,22 @@ const Product = ({ title }) => {
             </div>
 
             {/* Add Product Modal */}
-            <AddProductModal show={showModal} handleClose={() => setShowModal(false)} refreshProducts={fetchProducts} />
+            <AddProductModal
+                show={showAddModal}
+                handleClose={() => setShowAddModal(false)}
+                refreshProducts={fetchProducts}
+            />
+
+            {/* Edit Product Modal */}
+            <EditProductModal
+                show={showEditModal}
+                handleClose={() => {
+                    setShowEditModal(false);
+                    setCurrentProduct(null);
+                }}
+                refreshProducts={fetchProducts}
+                product={currentProduct}
+            />
         </div>
     );
 };
