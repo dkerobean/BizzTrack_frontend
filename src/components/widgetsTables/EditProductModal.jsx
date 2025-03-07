@@ -12,7 +12,6 @@ const EditProductModal = ({ show, handleClose, refreshProducts, product }) => {
         lowStockAlert: '',
         category: '',
         sku: '',
-        organizationId: '67c58aa09078342e0b373466',
         images: []
     });
     const [loading, setLoading] = useState(false);
@@ -30,7 +29,6 @@ const EditProductModal = ({ show, handleClose, refreshProducts, product }) => {
                 lowStockAlert: product.lowStockAlert || '',
                 category: product.category || '',
                 sku: product.sku || '',
-                organizationId: product.organizationId || '67c58aa09078342e0b373466',
             });
 
             if (product.images && product.images.length > 0) {
@@ -64,7 +62,6 @@ const EditProductModal = ({ show, handleClose, refreshProducts, product }) => {
         data.append('lowStockAlert', formData.lowStockAlert);
         data.append('category', formData.category);
         data.append('sku', formData.sku);
-        data.append('organizationId', formData.organizationId);
 
         // Append info about existing images to keep
         if (existingImages.length > 0) {
@@ -199,18 +196,7 @@ const EditProductModal = ({ show, handleClose, refreshProducts, product }) => {
                             </Form.Group>
                         </Col>
 
-                        <Col md={6}>
-                            <Form.Group className="mb-3">
-                                <Form.Control
-                                    name="organizationId"
-                                    value={formData.organizationId}
-                                    onChange={handleChange}
-                                    required
-                                    disabled
-                                    hidden
-                                />
-                            </Form.Group>
-                        </Col>
+                        
 
                         <Col md={12}>
                             <Form.Group className="mb-3">
