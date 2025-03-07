@@ -4,7 +4,7 @@ import axios from 'axios';
 import { toast } from 'sonner';
 
 const AddProductModal = ({ show, handleClose, refreshProducts }) => {
-    const [formData, setFormData] = useState({
+    const initialFormState = {
         name: '',
         description: '',
         price: '',
@@ -14,7 +14,9 @@ const AddProductModal = ({ show, handleClose, refreshProducts }) => {
         sku: '',
         organizationId: '67c58aa09078342e0b373466',
         images: []
-    });
+    };
+
+    const [formData, setFormData] = useState(initialFormState);
     const [loading, setLoading] = useState(false);
     const [selectedFiles, setSelectedFiles] = useState([]);
 
@@ -24,7 +26,7 @@ const AddProductModal = ({ show, handleClose, refreshProducts }) => {
         for (let i = 0; i < 9; i++) {
             newSku += chars.charAt(Math.floor(Math.random() * chars.length));
         }
-        setFormData({...formData, sku: newSku});
+        setFormData({ ...formData, sku: newSku });
     };
 
     const handleFileSelect = (e) => {
@@ -36,8 +38,6 @@ const AddProductModal = ({ show, handleClose, refreshProducts }) => {
         setLoading(true);
 
         const data = new FormData();
-
-        // Append all fields including organizationId
         data.append('name', formData.name);
         data.append('description', formData.description);
         data.append('price', formData.price);
@@ -45,9 +45,8 @@ const AddProductModal = ({ show, handleClose, refreshProducts }) => {
         data.append('lowStockAlert', formData.lowStockAlert);
         data.append('category', formData.category);
         data.append('sku', formData.sku);
-        data.append('organizationId', formData.organizationId); // Ensure this line exists
+        data.append('organizationId', formData.organizationId);
 
-        // Append files
         selectedFiles.forEach(file => {
             data.append('images', file);
         });
@@ -65,19 +64,24 @@ const AddProductModal = ({ show, handleClose, refreshProducts }) => {
                 }
             );
 
-            toast.success('Product added successfully!');
+            toast.success('Product added successfully!'); // ✅ Success Toast
+
+            // Reset the form and selected files
+            setFormData(initialFormState);
+            setSelectedFiles([]);
+
             refreshProducts();
             handleClose();
         } catch (error) {
             console.error('Error adding product:', error);
-            toast.error('Failed to add product. Please try again.');
+            toast.error('Failed to add product. Please try again.'); // ❌ Error Toast
         } finally {
             setLoading(false);
         }
     };
 
     const handleChange = (e) => {
-        setFormData({...formData, [e.target.name]: e.target.value});
+        setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
     return (
@@ -180,7 +184,6 @@ const AddProductModal = ({ show, handleClose, refreshProducts }) => {
                                     required
                                     disabled
                                     hidden
-
                                 />
                             </Form.Group>
                         </Col>
