@@ -55,23 +55,19 @@ const EditProductModal = ({ show, handleClose, refreshProducts, product }) => {
         setLoading(true);
 
         const data = new FormData();
-        data.append('name', formData.name);
-        data.append('description', formData.description);
-        data.append('price', formData.price);
-        data.append('stock', formData.stock);
-        data.append('lowStockAlert', formData.lowStockAlert);
-        data.append('category', formData.category);
-        data.append('sku', formData.sku);
 
-        // Append info about existing images to keep
-        if (existingImages.length > 0) {
-            data.append('existingImages', JSON.stringify(existingImages));
-        }
+        // Append non-file fields
+  Object.entries(formData).forEach(([key, value]) => {
+    data.append(key, value);
+  });
 
-        // Append new images if any
-        selectedFiles.forEach(file => {
-            data.append('images', file);
-        });
+  // Append existing images
+  data.append('existingImages', JSON.stringify(existingImages));
+
+  // Append new images
+  selectedFiles.forEach(file => {
+    data.append('images', file);
+  });
 
         try {
             const token = localStorage.getItem('token');

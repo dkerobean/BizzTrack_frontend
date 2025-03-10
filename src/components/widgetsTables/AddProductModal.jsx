@@ -38,18 +38,16 @@ const AddProductModal = ({ show, handleClose, refreshProducts }) => {
         setLoading(true);
 
         const data = new FormData();
-        data.append('name', formData.name);
-        data.append('description', formData.description);
-        data.append('price', formData.price);
-        data.append('stock', formData.stock);
-        data.append('lowStockAlert', formData.lowStockAlert);
-        data.append('category', formData.category);
-        data.append('sku', formData.sku);
-        data.append('organizationId', formData.organizationId);
+        // Append all fields except images
+        Object.entries(formData).forEach(([key, value]) => {
+            if (key !== 'images') data.append(key, value);
+        });
 
+        // Append images
         selectedFiles.forEach(file => {
             data.append('images', file);
         });
+
 
         try {
             const token = localStorage.getItem('token');
