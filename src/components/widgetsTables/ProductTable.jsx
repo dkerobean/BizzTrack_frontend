@@ -50,16 +50,14 @@ const Product = ({ title }) => {
             try {
                 const token = localStorage.getItem('token');
                 await axios.delete(
-                    `${import.meta.env.VITE_BACKEND_URL}/api/product/delete/${productId}`,
-                    {
-                        headers: { Authorization: `Bearer ${token}` }
-                    }
+                    `${import.meta.env.VITE_BACKEND_URL}/api/products/${productId}`,
+                    { headers: { Authorization: `Bearer ${token}` } }
                 );
                 toast.success(`Product "${productName}" deleted successfully`);
                 fetchProducts();
             } catch (error) {
                 console.error('Error deleting product:', error);
-                toast.error('Failed to delete product');
+                toast.error(error.response?.data?.message || 'Failed to delete product');
             }
         }
     };
@@ -103,7 +101,7 @@ const Product = ({ title }) => {
                                     <tr><td colSpan="7" className="text-center text-muted py-4">No products found</td></tr>
                                 ) : (
                                     products.map((product) => {
-                                        const progress = ((product.stock / (product.stock + product.lowStockAlert)) * 100).toFixed(0);
+                                        const progress = (product.stock / (product.stock + product.lowStockAlert)) * 100;
                                         let brColor = 'success';
                                         if (progress < 30) brColor = 'danger';
                                         else if (progress < 60) brColor = 'warning';
@@ -113,43 +111,47 @@ const Product = ({ title }) => {
                                                 <td>
                                                     <div className="hstack gap-3">
                                                         <div className="avatar-image avatar-lg rounded">
-                                                            <img className="img-fluid" src={product.images[0]} alt={product.name} />
+                                                            <img
+                                                                className="img-fluid"
+                                                                src={`${import.meta.env.VITE_BACKEND_URL}/${product.images?.[0]}`}
+                                                                alt={product.name}
+                                                            />
                                                         </div>
                                                         <div>
-                                                            <a href="#" className="d-block">{product.name}</a>
+                                                            <span className="d-block">{product.name}</span>
                                                             <span className="fs-12 text-muted">{product.category}</span>
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td>{product.description}</td>
                                                 <td>{new Date(product.createdAt).toLocaleDateString()}</td>
-                                                <td className="text-dark fw-bold">${product.price.toFixed(2)}</td>
+                                                <td className="text-dark fw-bold">${product.price?.toFixed(2)}</td>
                                                 <td className="text-dark fw-bold">{product.stock}</td>
                                                 <td>
-                                                    <div className="fs-12 fw-medium mb-2">{progress}% left</div>
+                                                    <div className="fs-12 fw-medium mb-2">{progress.toFixed(0)}% left</div>
                                                     <HorizontalProgress progress={progress} barColor={brColor} />
                                                 </td>
                                                 <td className="text-end">
                                                     <div className="hstack gap-2 justify-content-end">
                                                         <button className="btn btn-icon" title="View Product">
-                                                        <FiEye size={18} className="text-secondary" />
+                                                            <FiEye size={18} className="text-secondary" />
                                                         </button>
                                                         <button
-                                                        className="btn btn-icon"
-                                                        onClick={() => handleEditClick(product)}
-                                                        title="Edit Product"
+                                                            className="btn btn-icon"
+                                                            onClick={() => handleEditClick(product)}
+                                                            title="Edit Product"
                                                         >
-                                                        <FiEdit size={18} className="text-primary" />
+                                                            <FiEdit size={18} className="text-primary" />
                                                         </button>
                                                         <button
-                                                        className="btn btn-icon"
-                                                        onClick={() => handleDeleteClick(product._id, product.name)}
-                                                        title="Delete Product"
+                                                            className="btn btn-icon"
+                                                            onClick={() => handleDeleteClick(product._id, product.name)}
+                                                            title="Delete Product"
                                                         >
-                                                        <FiTrash2 size={18} className="text-danger" />
+                                                            <FiTrash2 size={18} className="text-danger" />
                                                         </button>
                                                     </div>
-                                                    </td>
+                                                </td>
                                             </tr>
                                         );
                                     })
@@ -158,18 +160,16 @@ const Product = ({ title }) => {
                         </table>
                     </div>
                 </div>
-                <div className="card-footer"> <Pagination /></div>
+                <div className="card-footer"><Pagination /></div>
                 <CardLoader refreshKey={refreshKey} />
             </div>
 
-            {/* Add Product Modal */}
             <AddProductModal
                 show={showAddModal}
                 handleClose={() => setShowAddModal(false)}
                 refreshProducts={fetchProducts}
             />
 
-            {/* Edit Product Modal */}
             <EditProductModal
                 show={showEditModal}
                 handleClose={() => {
