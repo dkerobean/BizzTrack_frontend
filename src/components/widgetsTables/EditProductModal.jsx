@@ -76,7 +76,7 @@ const EditProductModal = ({ show, handleClose, refreshProducts, product }) => {
         try {
             const token = localStorage.getItem('token');
             await axios.put(
-                `${import.meta.env.VITE_BACKEND_URL}/api/products/edit/${product._id}`,
+                `${import.meta.env.VITE_BACKEND_URL}/api/products/${product._id}`,
                 data,
                 {
                     headers: {
@@ -196,7 +196,7 @@ const EditProductModal = ({ show, handleClose, refreshProducts, product }) => {
                             </Form.Group>
                         </Col>
 
-                        
+
 
                         <Col md={12}>
                             <Form.Group className="mb-3">

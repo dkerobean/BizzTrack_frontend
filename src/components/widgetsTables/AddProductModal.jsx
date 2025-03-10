@@ -54,7 +54,7 @@ const AddProductModal = ({ show, handleClose, refreshProducts }) => {
         try {
             const token = localStorage.getItem('token');
             await axios.post(
-                `${import.meta.env.VITE_BACKEND_URL}/api/product/create`,
+                `${import.meta.env.VITE_BACKEND_URL}/api/products`,
                 data,
                 {
                     headers: {
@@ -64,7 +64,7 @@ const AddProductModal = ({ show, handleClose, refreshProducts }) => {
                 }
             );
 
-            toast.success('Product added successfully!'); // ✅ Success Toast
+            toast.success('Product added successfully!');
 
             // Reset the form and selected files
             setFormData(initialFormState);
@@ -74,7 +74,7 @@ const AddProductModal = ({ show, handleClose, refreshProducts }) => {
             handleClose();
         } catch (error) {
             console.error('Error adding product:', error);
-            toast.error('Failed to add product. Please try again.'); // ❌ Error Toast
+            toast.error('Failed to add product. Please try again.');
         } finally {
             setLoading(false);
         }
