@@ -48,6 +48,11 @@ const AddProductModal = ({ show, handleClose, refreshProducts }) => {
             data.append('images', file);
         });
 
+        console.log("🔍 Form Data Before Sending:");
+        for (let pair of data.entries()) {
+            console.log(pair[0], pair[1]);
+        }
+
 
         try {
             const token = localStorage.getItem('token');

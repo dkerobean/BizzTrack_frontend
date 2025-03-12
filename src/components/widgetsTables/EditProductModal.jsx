@@ -57,17 +57,17 @@ const EditProductModal = ({ show, handleClose, refreshProducts, product }) => {
         const data = new FormData();
 
         // Append non-file fields
-  Object.entries(formData).forEach(([key, value]) => {
-    data.append(key, value);
-  });
+        Object.entries(formData).forEach(([key, value]) => {
+            data.append(key, value);
+        });
 
-  // Append existing images
-  data.append('existingImages', JSON.stringify(existingImages));
+        // Append existing images
+        data.append('existingImages', JSON.stringify(existingImages));
 
-  // Append new images
-  selectedFiles.forEach(file => {
-    data.append('images', file);
-  });
+        // Append new images
+        selectedFiles.forEach(file => {
+            data.append('images', file);
+        });
 
         try {
             const token = localStorage.getItem('token');

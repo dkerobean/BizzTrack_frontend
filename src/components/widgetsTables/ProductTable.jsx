@@ -111,19 +111,21 @@ const Product = ({ title }) => {
                                                 <td>
                                                     <div className="avatar-image avatar-lg rounded">
                                                         <img
-                                                        src={`${import.meta.env.VITE_BACKEND_URL}/uploads/products/${product.images?.[0]}`}
-                                                        alt={product.name}
-                                                        onError={(e) => {
-                                                            e.target.src = "/placeholder-product.jpg"; // Fallback image
-                                                            e.target.style.objectFit = "cover";
-                                                        }}
-                                                        style={{
-                                                            width: "80px",
-                                                            height: "80px",
-                                                            objectFit: "cover",
-                                                            borderRadius: "4px",
-                                                        }}
-                                                        />
+                                                            src={product.images && product.images.length > 0
+                                                                ? `${import.meta.env.VITE_BACKEND_URL}/uploads/products/${product.images[0]}`
+                                                                : "/placeholder-product.jpg"}
+                                                            alt={product.name}
+                                                            onError={(e) => {
+                                                                e.target.src = "/placeholder-product.jpg";
+                                                                e.target.style.objectFit = "cover";
+                                                            }}
+                                                            style={{
+                                                                width: "80px",
+                                                                height: "80px",
+                                                                objectFit: "cover",
+                                                                borderRadius: "4px",
+                                                            }}
+                                                            />
                                                     </div>
                                                 </td>
                                                 <td>{product.description}</td>
