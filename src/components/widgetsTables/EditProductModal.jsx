@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 import { toast } from 'sonner';
+import categories from '../../utils/fackData/categories.json';
 
 const EditProductModal = ({ show, handleClose, refreshProducts, product }) => {
     const [formData, setFormData] = useState({
@@ -10,7 +11,7 @@ const EditProductModal = ({ show, handleClose, refreshProducts, product }) => {
         price: '',
         stock: '',
         lowStockAlert: '',
-        category: '',
+        category: '', // Initialize category as an empty string
         sku: '',
         images: []
     });
@@ -27,7 +28,7 @@ const EditProductModal = ({ show, handleClose, refreshProducts, product }) => {
                 price: product.price || '',
                 stock: product.stock || '',
                 lowStockAlert: product.lowStockAlert || '',
-                category: product.category || '',
+                category: product.category || '', // Ensure category is set
                 sku: product.sku || '',
             });
 
@@ -183,16 +184,21 @@ const EditProductModal = ({ show, handleClose, refreshProducts, product }) => {
                         <Col md={6}>
                             <Form.Group className="mb-3">
                                 <Form.Label>Category *</Form.Label>
-                                <Form.Control
+                                <Form.Select
                                     name="category"
-                                    value={formData.category}
+                                    value={formData.category || ''} // Ensure value is set
                                     onChange={handleChange}
                                     required
-                                />
+                                >
+                                    <option value="">Select a category</option>
+                                    {categories.map((category) => (
+                                        <option key={category} value={category}>
+                                            {category}
+                                        </option>
+                                    ))}
+                                </Form.Select>
                             </Form.Group>
                         </Col>
-
-
 
                         <Col md={12}>
                             <Form.Group className="mb-3">
@@ -215,7 +221,15 @@ const EditProductModal = ({ show, handleClose, refreshProducts, product }) => {
                                     <div className="d-flex flex-wrap gap-3 mt-2">
                                         {existingImages.map((img, index) => (
                                             <div key={index} className="position-relative" style={{ width: '100px' }}>
-                                                <img src={img} alt={`Product ${index}`} className="img-thumbnail" />
+                                                <img
+                                                    src={`${import.meta.env.VITE_BACKEND_URL}/uploads/products/${img}`}
+                                                    alt={`Product ${index}`}
+                                                    className="img-thumbnail"
+                                                    onError={(e) => {
+                                                        e.target.src = "/placeholder-product.jpg";
+                                                        e.target.style.objectFit = "cover";
+                                                    }}
+                                                />
                                                 <Button
                                                     variant="danger"
                                                     size="sm"
