@@ -109,23 +109,29 @@ const Product = ({ title }) => {
                                         return (
                                             <tr key={product._id}>
                                                 <td>
-                                                    <div className="avatar-image avatar-lg rounded">
-                                                        <img
-                                                            src={product.images && product.images.length > 0
-                                                                ? `${import.meta.env.VITE_BACKEND_URL}/uploads/products/${product.images[0]}`
-                                                                : "/placeholder-product.jpg"}
-                                                            alt={product.name}
-                                                            onError={(e) => {
-                                                                e.target.src = "/placeholder-product.jpg";
-                                                                e.target.style.objectFit = "cover";
-                                                            }}
-                                                            style={{
-                                                                width: "80px",
-                                                                height: "80px",
-                                                                objectFit: "cover",
-                                                                borderRadius: "4px",
-                                                            }}
+                                                    <div className="d-flex align-items-center">
+                                                        <div className="avatar-image avatar-lg rounded me-3">
+                                                            <img
+                                                                src={product.images && product.images.length > 0
+                                                                    ? `${import.meta.env.VITE_BACKEND_URL}/uploads/products/${product.images[0]}`
+                                                                    : "/placeholder-product.jpg"}
+                                                                alt={product.name}
+                                                                onError={(e) => {
+                                                                    e.target.src = "/placeholder-product.jpg";
+                                                                    e.target.style.objectFit = "cover";
+                                                                }}
+                                                                style={{
+                                                                    width: "80px",
+                                                                    height: "80px",
+                                                                    objectFit: "cover",
+                                                                    borderRadius: "4px",
+                                                                }}
                                                             />
+                                                        </div>
+                                                        <div>
+                                                            <div className="fw-bold">{product.name}</div>
+                                                            <div className="text-muted">{product.category}</div>
+                                                        </div>
                                                     </div>
                                                 </td>
                                                 <td>{product.description}</td>

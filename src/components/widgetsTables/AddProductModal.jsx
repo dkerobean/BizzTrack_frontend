@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 import { toast } from 'sonner';
+import categories from '../../utils/fackData/categories.json'; 
 
 const AddProductModal = ({ show, handleClose, refreshProducts }) => {
     const initialFormState = {
@@ -52,7 +53,6 @@ const AddProductModal = ({ show, handleClose, refreshProducts }) => {
         for (let pair of data.entries()) {
             console.log(pair[0], pair[1]);
         }
-
 
         try {
             const token = localStorage.getItem('token');
@@ -169,12 +169,19 @@ const AddProductModal = ({ show, handleClose, refreshProducts }) => {
                         <Col md={6}>
                             <Form.Group className="mb-3">
                                 <Form.Label>Category *</Form.Label>
-                                <Form.Control
+                                <Form.Select
                                     name="category"
                                     value={formData.category}
                                     onChange={handleChange}
                                     required
-                                />
+                                >
+                                    <option value="">Select a category</option>
+                                    {categories.map((category) => (
+                                        <option key={category} value={category}>
+                                            {category}
+                                        </option>
+                                    ))}
+                                </Form.Select>
                             </Form.Group>
                         </Col>
 
