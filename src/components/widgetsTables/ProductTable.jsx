@@ -97,7 +97,7 @@ const Product = ({ title }) => {
                             <tbody>
                                 {loading ? (
                                     <tr><td colSpan="7" className="text-center">Loading...</td></tr>
-                                ) : products.length === 0 ? (
+                                ) : (products || []).length === 0 ? (
                                     <tr><td colSpan="7" className="text-center text-muted py-4">No products found</td></tr>
                                 ) : (
                                     products.map((product) => {
